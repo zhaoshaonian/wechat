@@ -1,1 +1,32 @@
-<view>这是首页</view>
+<!--index.wxml 首页-->
+<!--图片轮播-->
+<view class="slider">
+  <swiper autoplay interval="4000" indicator-dots>
+    <swiper-item wx:for="{{imgUrls}}" wx:key="index">
+      <image src="{{item}}" lazy-load mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+</view>
+<!--音乐列表-->
+<scroll-view class="container" scroll-y="true">
+  <block wx:for="{{recommends}}" wx:key="index">
+		<view class="box" bindtap="playTap" data-id="{{item.id}}">
+			<view class="left">
+				<image src="{{item.album.picUrl}}" mode="aspectFill"/>
+			</view>
+			<view class="right">
+				<view class="content">
+					<view>
+						<text class="song-name">{{item.name}}</text>	
+					</view>
+					<view>
+						<text class="song-artists">{{item.artists}} - {{item.album.name}}</text>
+					</view>
+				</view>
+				<view class="play">
+					<image src="../../image/more.png" mode="scaleToFill"/>
+				</view>
+			</view>
+		</view>
+  </block>
+</scroll-view>

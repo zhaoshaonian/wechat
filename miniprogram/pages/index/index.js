@@ -1,120 +1,51 @@
 //index.js
-const app = getApp()
+var data = require('../../utils/data.js').songs;
 
 Page({
   data: {
-    avatarUrl: './user-unlogin.png',
-    userInfo: {},
-    logged: false,
-    takeSession: false,
-    requestResult: ''
+    imgUrls: [
+      '../../image/banner/banner1.jpg',
+      '../../image/banner/banner2.jpg',
+      '../../image/banner/banner3.jpg',
+      '../../image/banner/banner4.jpg'
+      
+    ]
   },
+  onLoad: function () {
+    var rs = [],
+      idsMap = {},
+      keys = Object.keys(data),
+      len = keys.length;
 
-  onLoad: function() {
-    if (!wx.cloud) {
-      wx.redirectTo({
-        url: '../chooseLib/chooseLib',
-      })
-      return
+    for (var i = 0; i < len; i++) {
+      var k = keys[i];
+
+      rs.push(Object.assign({
+        id: k,
+      }, data[k]));
+
+      idsMap[k] = {
+        preid: i > 0 ? keys[i - 1] : 0,
+        nextid: i < len - 1 ? keys[i + 1] : 0
+      }
     }
 
-    // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              this.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo
-              })
-            }
-          })
-        }
-      }
+    idsMap[keys[0]].preid = keys[len - 1];
+    idsMap[keys[len - 1]].nextid = keys[0];
+
+    this.setData({
+      recommends: rs
+    });
+
+    //console.log(rs)
+
+    wx.setStorageSync('ids', idsMap);
+  },
+  playTap: function (e) {
+    const dataset = e.currentTarget.dataset;
+    wx.navigateTo({
+      url: `../play/index?id=${dataset.id}`
     })
-  },
-
-  onGetUserInfo: function(e) {
-    if (!this.logged && e.detail.userInfo) {
-      this.setData({
-        logged: true,
-        avatarUrl: e.detail.userInfo.avatarUrl,
-        userInfo: e.detail.userInfo
-      })
-    }
-  },
-
-  onGetOpenid: function() {
-    // 调用云函数
-    wx.cloud.callFunction({
-      name: 'login',
-      data: {},
-      success: res => {
-        console.log('[云函数] [login] user openid: ', res.result.openid)
-        app.globalData.openid = res.result.openid
-        wx.navigateTo({
-          url: '../userConsole/userConsole',
-        })
-      },
-      fail: err => {
-        console.error('[云函数] [login] 调用失败', err)
-        wx.navigateTo({
-          url: '../deployFunctions/deployFunctions',
-        })
-      }
-    })
-  },
-
-  // 上传图片
-  doUpload: function () {
-    // 选择图片
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: function (res) {
-
-        wx.showLoading({
-          title: '上传中',
-        })
-
-        const filePath = res.tempFilePaths[0]
-        
-        // 上传图片
-        const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
-        wx.cloud.uploadFile({
-          cloudPath,
-          filePath,
-          success: res => {
-            console.log('[上传文件] 成功：', res)
-
-            app.globalData.fileID = res.fileID
-            app.globalData.cloudPath = cloudPath
-            app.globalData.imagePath = filePath
-            
-            wx.navigateTo({
-              url: '../storageConsole/storageConsole'
-            })
-          },
-          fail: e => {
-            console.error('[上传文件] 失败：', e)
-            wx.showToast({
-              icon: 'none',
-              title: '上传失败',
-            })
-          },
-          complete: () => {
-            wx.hideLoading()
-          }
-        })
-
-      },
-      fail: e => {
-        console.error(e)
-      }
-    })
-  },
-
+    //console.log(dataset.id)
+  }
 })

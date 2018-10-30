@@ -1,18 +1,30 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/userConsole/userConsole",
-    "pages/storageConsole/storageConsole",
-    "pages/databaseGuide/databaseGuide",
-    "pages/addFunction/addFunction",
-    "pages/deployFunctions/deployFunctions",
-    "pages/chooseLib/chooseLib"
+    "pages/play/index",
+    "pages/my/index"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarBackgroundColor": "#bb2c08",
     "navigationBarTitleText": "网易云音乐",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar":{
+    "list":[
+      {
+        "pagePath":"pages/index/index",
+        "text":"推荐音乐",
+        "iconPath": "image/music.png",
+        "selectedIconPath": "image/music-active.png"
+      },
+      {
+        "pagePath": "pages/my/index",
+        "text": "我的音乐",
+        "iconPath": "image/my.png",
+        "selectedIconPath": "image/my-active.png"
+      }
+    ]
   }
 }
