@@ -9,13 +9,13 @@
 
 .weui-search-bar_input{ font-size:14px; height:28px; line-height:28px; margin-left:15px;}
 
-.weui-icon-clear{position:absolute; top:0; right:0; padding:8px;}
+.weui-icon-clear{position:absolute; top:0; right:0; padding:5px 8px;}
 
 .weui-search-bar_label{ position:absolute;top:0; right:0; bottom:0; left:0; z-index:2; border-radius: 3px; text-align:center; color:#9b9b9b; background:#fff; line-height:28px;}
 
 .weui-icon-search{ margin-right:8px; font-size:20px;}
 
-.weui-search-bar_text{display:inline-block; font-size:14px; vertical-align: middle;}
+.weui-search-bar_text{display:inline-block; font-size:14px; vertical-align: middle; margin-bottom:5px;}
 
 .weui-search-bar_cancel-btn{ margin-left:10px; line-height:28px; color:#bb2c08; white-space:nowrap;}
 
@@ -31,6 +31,19 @@
 .weui-cells_after-title{ margin-top:0;}
 
 .weui-cells_tips{ margin-top:0.77em; margim-bottom:0.3em; padding:0 15px; color:#000; font-size:14px;}
+
+.weui-cell:first-child:before { display: none;}
+
+.weui-cell_active { background-color: #ECECEC;}
+
+.weui-cell_primary { -webkit-box-align: start; -webkit-align-items: flex-start; align-items: flex-start;}
+
+.weui-cell__bd { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;}
+
+.weui-cell__ft { text-align: right; color: #999999;}
+
+
+
 
 
 /*顶部选项卡*/

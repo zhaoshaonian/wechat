@@ -1,3 +1,9 @@
 {
-	"navigationBarTextStyle": "white"
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#D43C33",
+    "navigationBarTitleText": "我的音乐",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FBFCFD"
+  }
 }

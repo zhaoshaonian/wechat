@@ -1,46 +1,50 @@
-<audio src="{{src}}" action="{{action}}" binderror="errorEvent" bindtimeupdate="timeupdateEvent" bindended="endEvent"></audio>
-<image class="play-bg" mode="aspectFill" src="{{picurl}}" ></image>
-<image wx:if="{{lyricHidden}}" bindtap="switchbgEvent" class="trun-bg" mode="aspectFill" src="{{picurl}}" style="transform: translateX(-50%) rotate({{deg}}deg);"></image>
-<view wx:if="{{!lyricHidden}}" id="container" class="play-container" animation="{{animationData}}" bindtap="switchbgEvent">
-	<view wx:for="{{lyricList}}" class="lyric {{item.time <= currentTime && item.endtime > currentTime ? 'selected' : ''}}">
-		<text wx:if="{{item.en}}">{{item.en}}</text>
-		<text wx:if="{{item.zh}}">{{item.zh}}</text>
-	</view>
+<!--index.wxml-->
+<view class="container" style=""  >
+<view class="bg" style=" background-image: url({{poster}});filter: blur(20px); position: absolute;left:0;top:0;right:0;bottom:0;opacity: 0.4;z-index: 0;"></view>
+  <!--歌曲圆圈信息-->
+  <view class="container-content">
+  <view class="fengmian" hidden="{{!islyric}}" bindtap="showlyric">
+    <view class="cicle-infor" style=" background-image: url({{poster}})">
+    </view>
+  </view>
+  <!--歌词-->
+<view class="lyric-content" hidden="{{islyric}}" style="height:401px; overflow-y: scroll;" bindtap="showCircle">
+  <view class="lyric"  style="overflow-y: scroll;">
+      <block wx:for="{{lyricArr}}" wx:key="index" >
+        <view> {{item}} </view>
+      </block>
+    </view>
 </view>
-<view class="footer">
-	<view class="progress">
-		<text>{{timeText}}</text>
-		<progress percent="{{per}}" color="red" stroke-width="4"/>
-		<text>{{durationText}}</text>
-	</view>
-  	<view class="controls">
-  		<image class="mode" mode="scaleToFill" bindtap="switchModeEvent" src="../../image/{{mode}}.png" />
-  		<image mode="scaleToFill" bindtap="prevEvent" src="../../image/prev.png" />
-  		<image mode="scaleToFill" bindtap="actionEvent" src="../../image/{{status === 'play' ? 'pause' : 'play'}}.png" />
-  		<image mode="scaleToFill" bindtap="nextEvent" src="../../image/next.png" />
-  		<image class="fav" mode="scaleToFill" bindtap="favEvent" src="../../image/{{fav}}.png" />
-  	</view>
+
+  <!--选择操作-->
+  <view class="other-content">
+    <view class="icon-choose">
+      <view class="download icon"></view>
+      <view class="like icon"></view>
+      <view class="add icon" bindtap="addsong"></view>
+    </view>
+    <!--滑动条-->
+    <view class="slider">
+      <view class="section section_gap">
+        <view class="body-view">
+          <slider bindchange="slider3change" show-value activeColor="#D43C33" />
+        </view>
+      </view>
+    </view>
+    <!--上一曲 下一曲操作-->
+    <view class="operations">
+      <view class="prev btn" bindtap="prev"></view>
+      <view class="play btn" bindtap="audioPlay" hidden="{{isplaying}}"></view>
+      <view class="pause btn" bindtap="audioPause" hidden="{{!isplaying}}"></view>
+      <view class="next btn" bindtap="next"></view>
+    </view>
+  </view>
+  </view>
+  <view class="lists"  style="transform: translateY({{percent}})">
+    <radio-group class="radio-group" bindchange="radioChange">
+  <label class="radio" wx:for="{{items}}" wx:key="index" >
+    <radio value="{{item.name}}" checked="{{item.checked}}"/>{{item.value}}
+  </label>
+</radio-group> 
+  </view>
 </view>
-<toast hidden="{{toastHidden}}" duration="2000" bindchange="toastChange">{{toastMsg}}</toast>
-<action-sheet hidden="{{favHidden}}" bindchange="actionSheetChange">
-	<action-sheet-item>
-		<input placeholder="＋ 新建收藏夹" placeholder-style="margin:0 auto;" maxlength="10" bindchange="addFavItem"/>
-	</action-sheet-item>
-	<block wx:for="{{favlist}}">
-    	<action-sheet-item class="favitem" bindtap="favItemTap" data-name="{{item.name}}">
-    		<view class="left">
-          <image wx:if="{{item.picurl}}" src="{{item.picurl}}" mode="aspectFit"/>
-          <image class="default" wx:else src="../../image/default.png" mode="aspectFit"/>
-        </view>
-        <view class="right">
-          <view>
-            <text class="fav-name">{{item.name}}</text>	
-          </view>
-          <view>
-            <text class="fav-count">共{{item.count}}首</text>
-          </view>
-        </view>
-    	</action-sheet-item>
-  	</block>
-  	<action-sheet-cancel>取消</action-sheet-cancel>
-</action-sheet>

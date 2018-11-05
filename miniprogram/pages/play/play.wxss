@@ -1,152 +1,145 @@
-page {
-	overflow: hidden;
-	background: radial-gradient(rgba(0,0,0,.5) 30%, rgba(0,0,0,1));
+/**index.wxss**/
+page{
+  width: 100%;
+  height: 100%;
+}
+.container {
+  position: relative;
+  overflow: hidden;
+}
+.container-content{
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+ height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.play-bg {
-	z-index: -1;
-	height: 100%;
-	width: 100%;
-	position: fixed;
-	top: 0;
-	left: 0;
-	opacity: 0.4;
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
 }
 
-.trun-bg {
-	height: 250px;
-	width: 250px;
-	position: fixed;
-	top: 20%;
-	left: 50%;
-	border-radius: 50%;
-	border: 40px solid rgba(0,0,0,0.5);
+.userinfo-nickname {
+  color: #aaa;
 }
 
-.play-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin-top: 350rpx;
+.usermotto {
+  margin-top: 200px;
 }
+.cicle-infor{
+  width: 230px;
+  height: 230px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 50%;
+ animation: rotate 10s linear infinite forwards;
+  margin: 0 auto;
+ 
 
-.lyric {
-	font-size: 15px;
-	text-align: center;
-	padding-left: 15px;
-	padding-right: 15px;
-	margin-bottom: 60rpx;
-	color: #d0d0d0;
-	transition: all .5s;
 }
-
-.lyric.selected {
-	color: #fff;
-	font-size: 16px;
+@keyframes rotate{
+  0%{
+    transform: rotate(0deg)
+  }100%{
+    transform: rotate(360deg)
+  }
 }
-
-.lyric text {
-	display: block;
-	margin-top: 15rpx;
+.fengmian{
+ flex: 1;
+ display: flex;
+ align-items: center;
 }
-
-.footer {
- 	position: fixed;
- 	bottom: 0;
- 	left: 0;
- 	right: 0;
- 	background: rgba(0,0,0,0.7);
- 	color: #fff;
+.other-content{
+  height: 170px;
 }
-
-.progress {
-	padding-top: 10px; 
-	display: flex;
-  	flex-direction: row;
-  	justify-content: space-around;
-	align-items: center;
+.container{
+  text-align: center;
 }
-
-.progress text {
-	font-size: 10px;
-	width: 12%;
-	text-align: center;
+.icon-choose{
+ 
 }
+.icon-choose, .operations{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-.progress progress {
-	width: 76%;
 }
-
-.controls {
-  	padding: 10px 0;
-  	width: 70%;
-  	margin: 0 auto;
-  	display: flex;
-  	flex-direction: row;
-  	justify-content: space-around;
-	align-items: center;
+.icon{
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  margin: 10px;
 }
-
-.controls image {
-  	display: block;
-  	width: 40px;
-  	height: 40px;
-  	margin: 0 5px;
+.like{
+  background-image:url(http://op4j4esv2.bkt.clouddn.com/like.png) ;
 }
-
-.controls .mode{
-  	position: absolute;
-  	width: 24px;
-  	height: 24px;
-  	left: 15px;
+.download{
+  background-image:url(http://op4j4esv2.bkt.clouddn.com/download.png) ;
+  
 }
-
-.controls .fav {
-	position: absolute;
-  	width: 24px;
-  	height: 24px;
-  	right: 15px;	
+.add{
+  background-image:url(http://op4j4esv2.bkt.clouddn.com/add.png) ;
+  
 }
-
-.favitem {
-	display: flex;
-	flex-direction: row;
-	width: 100%;
-	height: 45px;
+.btn{
+    width: 40px;
+  height: 40px;
+  background-size: cover;
+  margin: 10px;
 }
+.prev{
+  background-image:url(http://op4j4esv2.bkt.clouddn.com/pre.png) ;
 
-.favitem .left {
-	width: 12%;
-	height: 100%;
-	margin:0 15rpx;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	background-color: black;
 }
+.play, .pause{
+  background-image:url(http://op4j4esv2.bkt.clouddn.com/play.png) ;
+    width: 50px;
+  height: 50px;
 
-.favitem .left image {
-	width: 100%;
-	height: 100%;
 }
-
-.favitem .left .default {
-	width: 70%;
-	height: 70%;
+.pause{
+  background-image:url(http://op4j4esv2.bkt.clouddn.com/pause.png) ;
+  
 }
+.next{
+  background-image:url(http://op4j4esv2.bkt.clouddn.com/next.png) ;
 
-.favitem .right {
-	flex: 1;
-	height: 100%;
-	text-align: left;
 }
-
-.favitem .fav-name {
-	font-size: 15px;
+.active{
+  color: #fff;
 }
-
-.favitem .fav-count {
-	font-size: 12px;
-	color: #999;
+.lists{
+  position: absolute;
+  bottom: 0;
+  opacity: .8;
+  /*transform: translateY(170px);*/
+  z-index: 3;
+  background: linear-gradient(to top, transparent 0%, #D43C33 100%); 
+  width: 100%;
+  transition: all .5s;
+  
+}
+.lists radio-group{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 170px;
+  overflow-y: scroll;
+}
+.lists radio-group label{
+  padding: 5px 0 5px 20px;
 }

@@ -1,6 +1,6 @@
 //index.js
 var data = require('../../utils/data.js').songs;
-var sliderWidth = 110; // 需要设置slider的宽度，用于计算中间位置
+var sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
 Page({
   data: {
     inputShowed:false,
@@ -131,7 +131,7 @@ Page({
   playTap: function (e) {
     const dataset = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `../play/index?id=${dataset.id}`
+      url: `../play/play?id=${dataset.id}`
     })
     //console.log(dataset.id)
   },
@@ -154,7 +154,7 @@ Page({
     // 将当前点击的歌曲保存在缓存中
     wx.setStorageSync('clickdata', songData)
     wx.switchTab({
-      url: '../now/now'
+      url: '../play/play'
     })
   }
 })

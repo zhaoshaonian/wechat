@@ -1,9 +1,8 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/play/play",
     "pages/my/my",
-    "pages/now/now",
+    "pages/play/play",
     "pages/account/account"
   ],
   "window": {
@@ -28,7 +27,7 @@
         "selectedIconPath": "./images/my1.png"
       },
       {
-        "pagePath": "pages/now/now",
+        "pagePath": "pages/play/play",
         "text": "正在播放",
         "iconPath": "./images/now.png",
         "selectedIconPath": "./images/now1.png"
