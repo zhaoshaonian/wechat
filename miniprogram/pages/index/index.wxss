@@ -1,3 +1,53 @@
+/*顶部搜索*/
+.weui-search-bar{ position:relative; padding:8px 10px; display:flex; box-sizing:border-box; background:#efeff4; border-top:1rpx solid #d7d6dc; border-bottom:1rpx solid #d7d6dc;}
+
+.weui-search-bar_form{ position:relative; -webkit-box-flex: 1; -webkit-flex: auto; flex: auto; border-radius:5px; background:#fff; border:1rpx solid #e6e6ea;}
+
+.weui-search-bar_box{ width:100%; box-sizing:border-box; z-index:1; position:relative; padding:0 30rpx;}
+
+.weui-icon-search_in-box{ position:absolute; left:10px; top:7px; }
+
+.weui-search-bar_input{ font-size:14px; height:28px; line-height:28px; margin-left:15px;}
+
+.weui-icon-clear{position:absolute; top:0; right:0; padding:8px;}
+
+.weui-search-bar_label{ position:absolute;top:0; right:0; bottom:0; left:0; z-index:2; border-radius: 3px; text-align:center; color:#9b9b9b; background:#fff; line-height:28px;}
+
+.weui-icon-search{ margin-right:8px; font-size:20px;}
+
+.weui-search-bar_text{display:inline-block; font-size:14px; vertical-align: middle;}
+
+.weui-search-bar_cancel-btn{ margin-left:10px; line-height:28px; color:#bb2c08; white-space:nowrap;}
+
+.weui-cells{ position:relative; margin-top:18px; background:#fff; line-height:1.5; font-size:16px;}
+
+.weui-cells:before{ content:""; position:absolute; top:0; left:0; height:1px; border-top:1rpx solid #d9d9d9; color:#d9d9d9;}
+
+
+.weui-cells:after{ content:""; position:absolute; top:0; left:0; height:1px; border-top:1rpx solid #d9d9d9; color:#d9d9d9;}
+
+.weui-cells_title{ margin-top:0.77em; margim-bottom:0.3em; padding:0 15px; color:#000; font-size:14px;}
+
+.weui-cells_after-title{ margin-top:0;}
+
+.weui-cells_tips{ margin-top:0.77em; margim-bottom:0.3em; padding:0 15px; color:#000; font-size:14px;}
+
+
+/*顶部选项卡*/
+.weui-tab { position: relative; height: 100%; }
+
+.weui-tab_panel { box-sizing: border-box; height: 100%; padding-top: 48px; overflow: auto; -webkit-overflow-scrolling: touch; }
+
+.weui-navbar { display: -webkit-box; display: -webkit-flex; display: flex; position: absolute; z-index: 500; top: 0; width: 100%; border-bottom: 1rpx solid #bb2c08; }
+
+.weui-navbar_item { position: relative; display: block; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; padding: 13px 0; text-align: center; font-size: 0; }
+
+.weui-navbar_item.weui-bar_item_on { color: #bb2c08; }
+
+.weui-navbar_slider { position: absolute; content: " "; left: 0; bottom: 0; width: 6em; height: 3px; background-color: #bb2c08; -webkit-transition: -webkit-transform .3s; transition: -webkit-transform .3s; transition: transform .3s; transition: transform .3s, -webkit-transform .3s; }
+
+.weui-navbar_title { display: inline-block; font-size: 15px; max-width: 8em; width: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal; }
+
 .slider,.slider image,.slider swiper{ width:100%; height:300rpx;}
 
 .container{ display:flex; flex-direction: column; align-items:stretch; box-sizing:border-box; padding-top:10rpx;}
