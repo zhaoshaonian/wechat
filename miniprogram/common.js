@@ -42,7 +42,7 @@ const operation = {
     },
     getlyric: function (id) {
         return new Promise((resolve, reject) => {
-            console.log('id:', id)
+            //console.log('id:', id)
             let url = `http://neteasemusic.leanapp.cn/lyric`
             wx.request({
                 url: url,

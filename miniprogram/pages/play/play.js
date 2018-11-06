@@ -7,7 +7,7 @@ Page({
   data: {
     id: 436514312,
     name: "成都",
-    src: "https://m10.music.126.net/20181105232609/6eab7a5a3dc79b1176f20e2438a24634/ymusic/fa90/df9c/59f7/95c4a2802e0b9191ae1a048f127e53c5.mp3",
+    src: "https://m10.music.126.net/20181106205800/a820683394a3738a030e12e4d0f0adef/ymusic/fa90/df9c/59f7/95c4a2802e0b9191ae1a048f127e53c5.mp3",
     poster: "http://p1.music.126.net/34YW1QtKxJ_3YnX9ZzKhzw==/2946691234868155.jpg",
     author: "赵雷",
     isplaying: true,
@@ -73,7 +73,7 @@ Page({
     let that = this;
     Common.asyncGetStorage('clickdata')//本地缓存
       .then(data => {
-        // console.log(data)
+        //console.log(data)
         if (!data) return;
         that.setData({
           id: data.id,

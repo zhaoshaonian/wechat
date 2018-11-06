@@ -1,6 +1,6 @@
 <!--index.wxml-->
 <view class="container" style=""  >
-<view class="bg" style=" background-image: url({{poster}});filter: blur(20px); position: absolute;left:0;top:0;right:0;bottom:0;opacity: 0.4;z-index: 0;"></view>
+<view class="bg" style="background-image: url({{poster}});filter: blur(10px); position: absolute;left:0;top:0;right:0;bottom:0;opacity: 0.6;z-index: 1;"></view>
   <!--歌曲圆圈信息-->
   <view class="container-content">
   <view class="fengmian" hidden="{{!islyric}}" bindtap="showlyric">
