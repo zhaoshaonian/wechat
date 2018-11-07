@@ -37,8 +37,8 @@ Page({
       inputVal: ""
     });
   },
+
   inputTyping: function (e) {
-    let that = this
     console.log(e.detail)
     this.setData({
       inputVal: e.detail.value
@@ -76,18 +76,12 @@ Page({
           data: temp
         })
       },
-      fail: function (res) {
-        // fail
-      },
-      complete: function (res) {
-        // complete
-
-      }
     })
   },
   onShow: function () {
     wx.hideLoading()
   },
+
   onLoad: function () {
     //顶部导航栏
     var that = this;
@@ -100,42 +94,35 @@ Page({
       }
     });
     var rs = [],
-      idsMap = {},
-      keys = Object.keys(data),
-      len = keys.length;
-
+    idsMap = {},
+    keys = Object.keys(data),
+    len = keys.length
     for (var i = 0; i < len; i++) {
       var k = keys[i];
-
       rs.push(Object.assign({
         id: k,
       }, data[k]));
-
       idsMap[k] = {
         preid: i > 0 ? keys[i - 1] : 0,
         nextid: i < len - 1 ? keys[i + 1] : 0
       }
     }
-
     idsMap[keys[0]].preid = keys[len - 1];
     idsMap[keys[len - 1]].nextid = keys[0];
-
-    this.setData({
+    that.setData({
       recommends: rs
     });
-
-    //console.log(rs)
-
     wx.setStorageSync('ids', idsMap);
   },
+
+
   playTap: function (e) {
     const dataset = e.currentTarget.dataset;
-    wx.navigateTo({
+    console.log(dataset)
+    wx.switchTab({
       url: `../play/play?id=${dataset.id}`
     })
-    //console.log(dataset.id)
   },
-  
   //搜索
   tabClick: function (e) {
     this.setData({

@@ -1,237 +1,308 @@
-//index.js
-//获取应用实例
-var Common = require('../../common')
-
-var app = getApp()
+var data = require('../../utils/data.js').songs;
+var favUtil = require('../../utils/fav.js');
+var strRe = /\[(\d{2}:\d{2})\.\d{2,}\](.*)/;
 Page({
-  data: {
-    id: 436514312,
-    name: "成都",
-    src: "https://m10.music.126.net/20181106205800/a820683394a3738a030e12e4d0f0adef/ymusic/fa90/df9c/59f7/95c4a2802e0b9191ae1a048f127e53c5.mp3",
-    poster: "http://p1.music.126.net/34YW1QtKxJ_3YnX9ZzKhzw==/2946691234868155.jpg",
-    author: "赵雷",
-    isplaying: true,
-    islyric: false,
-    sumduration: 0,
-    lyricobj: {},
-    lyricArr: [],
-    isadd: false,
-    items: [
-      { name: 'recent', value: '最近' },
-      { name: 'like', value: '我的收藏' }
-    ],
-    percent: '100%'
-  },
-  addsong: function () {
-    this.setData({
-      percent: '0'
-    })
-  },
-  radioChange: function (e) {
-    console.log('radio发生change事件，携带value值为：', e.detail.value)
-    this.setData({
-      percent: '100%'
-    })
-  },
-  //事件处理函数
-  bindViewTap: function () {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
-  showCircle: function () {
-    this.setData({
-      islyric: true,
-      percent: '100%'
-    })
-  },
-  showlyric: function () {
-    this.setData({
-      islyric: false,
-      percent: '100%'
-    })
-  },
-  onLoad: function () {
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
-    console.log('正在播放 onLoad')
-    var that = this
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function (userInfo) {
-      //更新数据
-      that.setData({
-        userInfo: userInfo
-      })
-    }),
-      wx.setNavigationBarTitle({
-        title: '正在播放'
-      })
-  },
-  onShow: function () {
-    let that = this;
-    Common.asyncGetStorage('clickdata')//本地缓存
-      .then(data => {
-        //console.log(data)
-        if (!data) return;
-        that.setData({
-          id: data.id,
-          name: data.name,
-          src: data.mp3Url,
-          poster: data.picUrl,
-          author: data.singer
-        })
-        return Common.playMusic(data.mp3Url, data.name, data.picUrl);
-      })
-      .then(status => {
-        if (!status) return;
-        wx.hideLoading();
-        console.log('id,', that.data.id)
-        return Common.getlyric(that.data.id)
-      })
-      .then((lyricArr) => {
-        console.log('lyricArr', lyricArr)
-        that.setData({
-          lyricArr: lyricArr
-        })
-        return Common.getMusicData()
-      })
-      .then(data => {
-        let tempduration = data.duration
-        console.log('get bg success', tempduration, data)
-        // 设置时长
-        that.setData({
-          sumduration: tempduration
-        })
-      })
-  },
-  audioPlay: function () {
-    //背景音乐信息
+	data: {
+		toastHidden: true,
+    currentId:""
+	},
+	onLoad: function(param) {
+		this.setData({
+			currentId: param.id
+		})
+		this.idsMap = wx.getStorageSync('ids') || {};
+		this.idsArr = Object.keys(this.idsMap);
+	},
+	onReady: function() {
+		this.reload(this.data.currentId);
+	},
+	onShow: function() {
+		this.animation = wx.createAnimation({
+			duration: 1000,
+			timingFunction: 'ease',
+		});
+	},
+	onHide: function() {
+		this.clearTurner();
+	},
+	onUnload: function() {
+		this.clearTurner();
+	},
+	errorEvent: function(e) {
+		console.log("加载资源失败 code：", e.detail.errMsg);
+		this.reload(this.idsMap[Number(this.data.currentId)].nextid);
+	},
+	prevEvent: function(e) {
+		this.reload(this.idsMap[Number(this.data.currentId)].preid);
+	},
+	nextEvent: function(e) {
+		this.reload(this.idsMap[Number(this.data.currentId)].nextid);
+	},
+	actionEvent: function(e) {
+		var method = this.data.status === 'play' ? 'pause' : 'play';
+		this.setData({
+			status: method,
+			action: {
+				method: method
+			}
+		});
 
-    wx.getBackgroundAudioPlayerState({
-      success: function (res) {
-        var status = res.status
-        var dataUrl = res.dataUrl
-        var currentPosition = res.currentPosition
-        var duration = res.duration
-        var downloadPercent = res.downloadPercent
-        wx.playBackgroundAudio({
-          dataUrl: dataUrl
-        })
-        wx.seekBackgroundAudio({
-          position: currentPosition
-        })
+		if (method === 'pause') this.clearTurner();
+	},
+	switchModeEvent: function(e) {
+		var newMode = 'loop';
+		var toastMsg = "列表循环";
+		if (this.data.mode === 'loop') {
+			newMode = 'single';
+			toastMsg = "单曲循环";
+		} else if (this.data.mode === 'single') {
+			newMode = 'random';
+			toastMsg = "随机播放";
+		}
+		this.setData({
+			mode: newMode,
+			toastMsg: toastMsg,
+			toastHidden: false
+		})
+	},
+	switchbgEvent: function(e) {
+		this.setData({
+			lyricHidden: !this.data.lyricHidden
+		});
+	},
+	favEvent: function(e) {
+		if (this.data.fav === 'unlike') {
+			this.setData({
+				favHidden: false
+			});
+			return;
+		}
 
-      }
-    })
-    this.setData({
-      isplaying: true
-    })
-  },
-  audioPause: function () {
-    wx.pauseBackgroundAudio()
-    this.setData({
-      isplaying: false
-    })
-  },
-  audio14: function () {
+		var id = this.data.currentId,
+			fav = wx.getStorageSync('fav') || {},
+			favName = fav[id],
+			favlist = wx.getStorageSync('favlist') || {},
+			favData = favlist[favName];
 
-  },
-  audioStart: function () {
+		delete fav[id];
+		if (favData) {
+			favData.list.splice(favData.list.indexOf(id), 1);
 
-  },
-  slider3change: function (e) {
-    sliderToseek(e, function (dataUrl, cal) {
-      wx.playBackgroundAudio({
-        dataUrl: dataUrl
-      })
-      wx.seekBackgroundAudio({
-        position: cal
-      })
-    })
+			if (favData.list.length) {
+				favData.picurl = data[favData.list[favData.list.length - 1]].album.picUrl;
+			} else {
+				favData.picurl = '';
+			}
+		}
 
-  },
-  prev: function () {
-    prevSong(this)
-  }
+		wx.setStorageSync('fav', fav);
+		wx.setStorageSync('favlist', favlist);
+
+		this.setData({
+			fav: 'unlike',
+			favlist: favUtil.getFavList()
+		});
+	},
+	addFavItem: function(e) {
+		this.addFav(e.detail.value);
+	},
+	favItemTap: function(e) {
+		this.addFav(e.currentTarget.dataset.name);
+	},
+	actionSheetChange: function(e) {
+		this.setData({
+			favHidden: true
+		});
+	},
+	timeupdateEvent: function(e) {
+		var t = e.detail.currentTime,
+			d = e.detail.duration,
+			step = this.isEnSong ? 78 : 55,
+			list = this.data.lyricList,
+			cIndex = this.data.currentIndex;
+
+		if (cIndex < list.length - 1 && t >= list[cIndex + 1].time) {
+			this.animation.translateY(-step * (cIndex + 1)).step();
+
+			this.setData({
+				currentTime: t,
+				currentIndex: cIndex + 1,
+				animationData: this.animation.export()
+			});
+		}
+
+		this.setData({
+			per: Math.floor(t / d * 100),
+			timeText: this.formatTime(t),
+			durationText: this.formatTime(d)
+		});
+
+		if (!this.turner && this.data.status === 'play') {
+			this.turner = setInterval(() => {
+				this.setData({
+					deg: this.data.deg + 1,
+				})
+			}, 50);
+		}
+	},
+	endEvent: function(e) {
+		this.reload(this.getNextSongId());
+	},
+	toastChange: function(e) {
+		this.setData({
+			toastHidden: true
+		});
+	},
+	reload: function(id) {
+		var song = data[id] || {};
+    console.log(id)
+
+		this.clearTurner();
+		this.animation.translateY(0).step({
+			duration: 1000,
+			delay: 100
+		});
+		this.setData({
+			per: 0,
+			deg: 0,
+			status: 'play',
+			lyricHidden: true,
+			toastHidden: true,
+			favHidden: true,
+			fav: wx.getStorageSync('fav')[id] ? 'liked' : 'unlike',
+			mode: this.data.mode || 'loop',
+			currentId: id,
+			currentTime: '0',
+			currentIndex: -1,
+			timeText: '00:00',
+			durationText: '',
+			animationData: this.animation.export(),
+			title: song.name,
+			picurl: song.album.picUrl,
+			src: song.mp3Url,
+			action: {
+				method: 'setCurrentTime',
+				data: 0
+			},
+			lyricList: this.getLyricList(song),
+			favlist: favUtil.getFavList()
+		});
+
+		wx.setNavigationBarTitle({
+			title: song.name
+		});
+
+		setTimeout(() => {
+			this.setData({
+				action: {
+					method: 'play'
+				}
+			})
+		}, 100);
+	},
+	getNextSongId: function() {
+		if (this.data.mode === 'single') {
+			return this.data.currentId;
+		} else if (this.data.mode === 'random') {
+			return idsArr[Math.floor(Math.random() * idsArr.length)]
+		} else if (this.data.mode === 'loop') {
+			return this.idsMap[Number(this.data.currentId)].nextid;
+		}
+	},
+	getLyricList: function(song) {
+		var obj = {},
+			lyricList = [],
+			zh = song.zh ? song.zh.split('\n') : [],
+			en = song.en ? song.en.split('\n') : [];
+
+		zh.forEach(function(str) {
+			var arr = str.match(strRe);
+			if (!arr) return;
+
+			var k = arr[1],
+				v = arr[2] || '(music)';
+
+			if (!obj[k]) obj[k] = {};
+			obj[k].zh = v;
+		});
+		if (en.length) {
+			this.isEnSong = true;
+		} else {
+			this.isEnSong = false;
+		}
+
+		en.forEach(function(str) {
+			var arr = str.match(strRe);
+			if (!arr) return;
+
+			var k = arr[1],
+				v = arr[2] || '(music)';
+
+			if (!obj[k]) obj[k] = {};
+			obj[k].en = v;
+		});
+
+		for (var t in obj) {
+			var ts = t.split(':');
+			var time = parseInt(ts[0]) * 60 + parseInt(ts[1]);
+
+			if (lyricList.length) {
+				lyricList[lyricList.length - 1].endtime = time;
+			}
+
+			lyricList.push({
+				time: time,
+				zh: obj[t].zh,
+				en: obj[t].en
+			});
+		}
+
+		return lyricList;
+	},
+	clearTurner: function() {
+		if (this.turner) {
+			clearInterval(this.turner);
+			this.turner = null;
+		}
+	},
+	addFav: function(favName) {
+		if (!favName) {
+			return;
+		}
+
+		var id = this.data.currentId,
+			fav = wx.getStorageSync('fav') || {},
+			favlist = wx.getStorageSync('favlist') || {};
+
+		fav[id] = favName;
+		if (!favlist[favName]) favlist[favName] = {
+			picurl: '',
+			list: []
+		}
+
+		var favData = favlist[favName];
+		favData.picurl = data[id].album.picUrl;
+		favData.list.push(id);
+
+		wx.setStorageSync('fav', fav);
+		wx.setStorageSync('favlist', favlist);
+
+		this.setData({
+			fav: 'liked',
+			toastMsg: '收藏成功',
+			toastHidden: false,
+			favHidden: true,
+			favlist: favUtil.getFavList()
+		});
+	},
+	formatTime: function(time) {
+		time = Math.floor(time);
+		var m = Math.floor(time / 60).toString();
+		m = m.length < 2 ? '0' + m : m;
+
+		var s = (time - parseInt(m) * 60).toString();
+		s = s.length < 2 ? '0' + s : s;
+
+		return `${m}:${s}`;
+	}
 })
-// 上一曲
-function prevSong(that) {
-  let id = that.data.id
-  console.log('id', id)
-  wx.getStorage({
-    key: 'searchReault',
-    success: function (res) {
-      console.log(res.data)
-      let currentSongIndex = res.data.findIndex((item) => {
-        return item.id == id;
-      })
-      console.log(currentSongIndex)
-      currentSongIndex--;
-      console.log(res.data[currentSongIndex])
-      wx.playBackgroundAudio({
-        dataUrl: res.data[currentSongIndex].mp3Url
-      })
-      wx.switchTab({
-        url: '../play/play'
-      })
-
-    }
-  })
-}
-//滑动 歌曲快进
-function sliderToseek(e, cb) {
-  wx.getBackgroundAudioPlayerState({
-    success: function (res) {
-      var dataUrl = res.dataUrl
-      var duration = res.duration
-      let val = e.detail.value
-      let cal = val * duration / 100
-      cb && cb(dataUrl, cal);
-    }
-  })
-}
-
-// 获取歌词
-function getlyric(id, cb) {
-  console.log('id:', id)
-  let url = `http://neteasemusic.leanapp.cn/lyric`
-  wx.request({
-    url: url,
-    data: {
-      id: id
-    },
-    method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-    // header: {}, // 设置请求的 header
-    success: function (res) {
-      // success
-
-      if (!res.data.lrc.lyric) return false;
-
-      let lyric = res.data.lrc.lyric
-
-      let timearr = lyric.split('[')
-      let obj = {}
-      let lyricArr = []
-      // seek 为键  歌词为value
-      timearr.forEach((item) => {
-        let key = parseInt(item.split(']')[0].split(':')[0]) * 60 + parseInt(item.split(']')[0].split(':')[1])
-        let val = item.split(']')[1]
-
-        obj[key] = val
-      })
-      for (let key in obj) {
-        // obj[key] = obj[key].split('\n')[0]
-        lyricArr.push(obj[key])
-      }
-      cb && cb(obj, lyricArr)
-    },
-    fail: function (res) {
-      // fail
-    },
-    complete: function (res) {
-      // complete
-    }
-  })
-}

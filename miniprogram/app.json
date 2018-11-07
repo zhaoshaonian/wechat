@@ -1,8 +1,9 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/my/my",
     "pages/play/play",
+    "pages/my/my",
+    "pages/playing/playing",
     "pages/account/account"
   ],
   "window": {
